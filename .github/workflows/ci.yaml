@@ -4,9 +4,10 @@ name: My Flaky Test
 on:
   # TODO 1: specify a branch
   push:
-
+    branches: [main]
   # TODO 3: specify a cron schedule
-
+  schedule:
+    - cron: '*/15 * * * *'
 jobs:
   # run the flaky test job
   flaky-tests:
@@ -27,5 +28,13 @@ jobs:
     - name: Test with pytest repeatedly
       # TODO 2 fill in the step
       run: |
+        for var in {1..20}; do pytest; done
 
   # TODO 4: add another job
+  check_for_broken_links_job:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: JustinBeckwith/linkinator-action@v1
+        with: 
+          paths: README.md
